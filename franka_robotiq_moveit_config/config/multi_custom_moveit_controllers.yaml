@@ -1,0 +1,45 @@
+controller_names:
+  - left_joint_trajectory_controller
+  - left_robotiq_gripper_controller
+  - right_joint_trajectory_controller
+  - right_robotiq_gripper_controller
+
+left_joint_trajectory_controller:
+  action_ns: follow_joint_trajectory
+  type: FollowJointTrajectory
+  default: true
+  joints:
+    - left_fr3_joint1
+    - left_fr3_joint2
+    - left_fr3_joint3
+    - left_fr3_joint4
+    - left_fr3_joint5
+    - left_fr3_joint6
+    - left_fr3_joint7
+
+left_robotiq_gripper_controller:
+    action_ns: gripper_cmd
+    type: GripperCommand
+    default: true
+    joints:
+      - left_robotiq_85_left_knuckle_joint
+
+right_joint_trajectory_controller:
+  action_ns: follow_joint_trajectory
+  type: FollowJointTrajectory
+  default: true
+  joints:
+    - right_fr3_joint1
+    - right_fr3_joint2
+    - right_fr3_joint3
+    - right_fr3_joint4
+    - right_fr3_joint5
+    - right_fr3_joint6
+    - right_fr3_joint7
+
+right_robotiq_gripper_controller:
+    action_ns: gripper_cmd
+    type: GripperCommand
+    default: true
+    joints:
+      - right_robotiq_85_left_knuckle_joint

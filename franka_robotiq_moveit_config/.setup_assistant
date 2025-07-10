@@ -1,0 +1,25 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: franka_robotiq
+    relative_path: urdf/fr3_robotiq.urdf.xacro
+  srdf:
+    relative_path: config/fr3.srdf
+  package_settings:
+    author_name: pablo
+    author_email: pablo.malvidofresnillo@tuni.fi
+    generated_timestamp: 1751984463
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
