@@ -23,5 +23,6 @@ setup(
             "interactive_marker_rviz = python_scripts_pkg.interactive_marker_rviz:main",
             "interactive_marker_rviz2 = python_scripts_pkg.interactive_marker_rviz2:main"
         ],
+        
     },
 )

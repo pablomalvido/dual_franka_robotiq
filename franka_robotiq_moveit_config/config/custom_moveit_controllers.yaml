@@ -1,8 +1,8 @@
 controller_names:
-  - joint_trajectory_controller
-  - robotiq_gripper_controller
+  - moveit_arm_controller
+  - moveit_robotiq_gripper_controller
 
-joint_trajectory_controller:
+moveit_arm_controller:
   action_ns: follow_joint_trajectory
   type: FollowJointTrajectory
   default: true
@@ -15,7 +15,7 @@ joint_trajectory_controller:
     - fr3_joint6
     - fr3_joint7
 
-robotiq_gripper_controller:
+moveit_robotiq_gripper_controller:
     action_ns: gripper_cmd
     type: GripperCommand
     default: true

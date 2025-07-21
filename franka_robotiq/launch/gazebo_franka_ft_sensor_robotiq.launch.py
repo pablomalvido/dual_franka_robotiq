@@ -52,7 +52,7 @@ def get_robot_description(context: LaunchContext, arm_id, load_gripper, franka_h
             'ee_id': 'robotiq', #franka_hand_str,
             'gazebo_effort': 'false',
             'use_fake_hardware': 'false',
-            'ft_sensor_sim': 'true', #false
+            'ft_sensor': 'true', #false
         }
     )
     robot_description = {'robot_description': robot_description_config.toxml()}
@@ -74,7 +74,7 @@ def get_robot_description(context: LaunchContext, arm_id, load_gripper, franka_h
 def generate_launch_description():
     # Configure ROS nodes for launch
     load_gripper_name = 'load_gripper'
-    franka_hand_name = 'franka_hand'
+    franka_hand_name = 'robotiq'
     arm_id_name = 'arm_id'
     namespace_name = 'namespace'
 

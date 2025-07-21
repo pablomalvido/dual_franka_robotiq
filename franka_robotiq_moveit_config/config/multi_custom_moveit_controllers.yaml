@@ -1,10 +1,10 @@
 controller_names:
-  - left_joint_trajectory_controller
-  - left_robotiq_gripper_controller
-  - right_joint_trajectory_controller
-  - right_robotiq_gripper_controller
+  - left_moveit_arm_controller
+  - left_moveit_robotiq_gripper_controller
+  - right_moveit_arm_controller
+  - right_moveit_robotiq_gripper_controller
 
-left_joint_trajectory_controller:
+left_moveit_arm_controller:
   action_ns: follow_joint_trajectory
   type: FollowJointTrajectory
   default: true
@@ -17,14 +17,14 @@ left_joint_trajectory_controller:
     - left_fr3_joint6
     - left_fr3_joint7
 
-left_robotiq_gripper_controller:
+left_moveit_robotiq_gripper_controller:
     action_ns: gripper_cmd
     type: GripperCommand
     default: true
     joints:
       - left_robotiq_85_left_knuckle_joint
 
-right_joint_trajectory_controller:
+right_moveit_arm_controller:
   action_ns: follow_joint_trajectory
   type: FollowJointTrajectory
   default: true
@@ -37,7 +37,7 @@ right_joint_trajectory_controller:
     - right_fr3_joint6
     - right_fr3_joint7
 
-right_robotiq_gripper_controller:
+right_moveit_robotiq_gripper_controller:
     action_ns: gripper_cmd
     type: GripperCommand
     default: true

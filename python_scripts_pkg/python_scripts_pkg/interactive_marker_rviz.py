@@ -117,7 +117,8 @@ class InteractiveMarkerDemo(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node1 = InteractiveMarkerDemo(prefix='left_', ns='')
+    node1 = InteractiveMarkerDemo(prefix='', ns='')
+    #node1 = InteractiveMarkerDemo(prefix='left_', ns='')
     #node2 = InteractiveMarkerDemo(prefix='right_', ns='/NS_2')
     rclpy.spin(node1)
     node1.destroy_node()

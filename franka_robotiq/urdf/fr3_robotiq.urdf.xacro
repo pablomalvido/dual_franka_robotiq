@@ -59,6 +59,8 @@
 
   <xacro:arg name="index" default='0' />
 
+  <xacro:arg name="ft_sensor" default="false" />
+
   <xacro:franka_robotiq arm_id="$(arg arm_id)"
                       joint_limits="${xacro.load_yaml('$(find franka_description)/robots/fr3/joint_limits.yaml')}"
                       inertials="${xacro.load_yaml('$(find franka_description)/robots/fr3/inertials.yaml')}"
@@ -77,6 +79,7 @@
                       arm_prefix= "$(arg arm_prefix)"
                       connected_to= "base"
                       index="$(arg index)"
+                      ft_sensor="$(arg ft_sensor)"
                       xyz="$(arg xyz)"
                       rpy="$(arg rpy)"
                       ns="$(arg ns)">
