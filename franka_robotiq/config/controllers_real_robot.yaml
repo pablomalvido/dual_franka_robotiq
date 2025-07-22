@@ -18,7 +18,7 @@
       joint_impedance_example_controller:
         type: franka_example_controllers/JointImpedanceExampleController
 
-      moveit_robotiq_gripper_controller:
+      robotiq_gripper_controller:
         type: position_controllers/GripperActionController
 
       robotiq_activation_controller:
@@ -77,8 +77,8 @@
 
       # See the cartesian_compliance_controller
       command_interfaces:
-          #- position
-        - velocity
+        - position
+        #- velocity
 
       solver:
           error_scale: 1.0
@@ -114,7 +114,7 @@
         - 0.5
 
 /**:
-  moveit_robotiq_gripper_controller:
+  robotiq_gripper_controller:
     ros__parameters:
       default: true
       joint: robotiq_85_left_knuckle_joint

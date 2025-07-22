@@ -10,6 +10,7 @@
                       xyz:='0 0 0'
                       rpy:='0 0 0'
                       hand:='true'
+                      hand_control:='true'
                       ee_id:='franka_hand'
                       gazebo:='false'
                       ft_sensor:='false'
@@ -97,7 +98,7 @@
       <joint name="tool0_joint" type="fixed">
         <parent link="${arm_prefix_modified + 'coupling_robotiq_link'}"/>
         <child link="${arm_prefix_modified + 'tool0'}"/>
-        <origin xyz="0 0 0.00695" rpy="0 0 0"/>
+        <origin xyz="0 0 0.00695" rpy="0 0 0.7854"/>
       </joint>
 
       <link name="${arm_prefix_modified + 'pre_ft_sensor_link'}">
@@ -229,9 +230,47 @@
       <xacro:if value="${ft_sensor}">
         <xacro:property name="connection" value="${arm_prefix_modified + 'tool0'}" />
       </xacro:if>
-      <xacro:robotiq_gripper name="RobotiqGripperHardwareInterface" prefix="${arm_prefix_modified}" parent="${connection}" use_fake_hardware="$(arg use_fake_hardware)" com_port="$(arg com_port)" sim_ignition="${gazebo}" robot="true">
-        <origin xyz="0 0 0" rpy="0 0 0" />
-      </xacro:robotiq_gripper>
+      <xacro:if value="${hand_control}">
+        <xacro:robotiq_gripper name="RobotiqGripperHardwareInterface" prefix="${arm_prefix_modified}" parent="${connection}" use_fake_hardware="$(arg use_fake_hardware)" com_port="$(arg com_port)" sim_ignition="${gazebo}" robot="true">
+          <origin xyz="0 0 0" rpy="0 0 0" />
+        </xacro:robotiq_gripper>
+      </xacro:if>
+      <xacro:unless value="${hand_control}">
+        <joint name="gripper_collisions_joint" type="fixed">
+          <parent link="${arm_prefix_modified + 'tool0'}"/>
+          <child link="gripper_collisions"/>
+          <origin xyz="0 0 0.08005" rpy="0 0 0"/>
+        </joint>
+
+        <joint name="tcp_collisions_joint" type="fixed">
+          <parent link="gripper_collisions"/>
+          <child link="tcp"/>
+          <origin xyz="0 0 0.08005" rpy="0 0 0"/>
+        </joint>
+
+        <link name="gripper_collisions">
+          <visual>
+            <geometry>
+              <cylinder radius="0.0375" length="0.1601"/>
+            </geometry>
+            <material name="collision_color">
+              <color rgba="1 0 0 0"/>
+            </material>
+          </visual>
+          <collision>
+            <geometry>
+              <cylinder radius="0.0375" length="0.1601"/>
+            </geometry>
+          </collision>
+          <inertial>
+            <mass value="0.8895"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <inertia ixx="0.00418" iyy="0.00508" izz="0.00125" ixy="0.0" ixz="0.0" iyz="0.0"/>
+          </inertial>
+        </link>
+
+        <link name="tcp"/>
+      </xacro:unless>
     </xacro:if>
 
     <xacro:if value="${hand and ee_id != 'none' and ee_id != 'franka_hand' and ee_id != 'robotiq'}">

@@ -7,8 +7,8 @@ controller_manager:
       type: joint_trajectory_controller/JointTrajectoryController
 
 
-    moveit_robotiq_gripper_controller:
-      type: position_controllers/GripperActionController
+    # moveit_robotiq_gripper_controller:
+    #   type: position_controllers/GripperActionController
 
 
     joint_state_broadcaster:
@@ -29,6 +29,6 @@ moveit_arm_controller:
     state_interfaces:
       - position
       - velocity
-moveit_robotiq_gripper_controller:
-  ros__parameters:
-    joint: robotiq_85_left_knuckle_joint
+# moveit_robotiq_gripper_controller:
+#   ros__parameters:
+#     joint: robotiq_85_left_knuckle_joint

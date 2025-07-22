@@ -19,6 +19,7 @@
 
   <!-- Should an end-effector be mounted at the flange?" -->
   <xacro:arg name="hand" default="true" />
+  <xacro:arg name="hand_control" default="true" />
 
   <!-- Which end-effector would be mounted at the flange?" -->
   <xacro:arg name="ee_id" default="robotiq" />
@@ -68,6 +69,7 @@
                       dynamics="${xacro.load_yaml('$(find franka_description)/robots/fr3/dynamics.yaml')}"
                       gazebo="$(arg gazebo)"
                       hand="$(arg hand)"
+                      hand_control="$(arg hand_control)"
                       ee_id="$(arg ee_id)"
                       with_sc="$(arg with_sc)"
                       ros2_control="$(arg ros2_control)"

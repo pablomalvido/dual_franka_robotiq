@@ -19,7 +19,7 @@
         gripper_max_force:=235.0
         gripper_closed_position:=0.7929">
 
-        <ros2_control name="${prefix + name}" type="system">
+        <ros2_control name="${prefix + name}TEST" type="system">
             <!-- Plugins -->
             <!--xacro:unless value="${robot and sim_ignition}"-->
                 <hardware>

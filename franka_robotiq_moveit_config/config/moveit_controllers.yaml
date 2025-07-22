@@ -5,7 +5,7 @@ moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControll
 moveit_simple_controller_manager:
   controller_names:
     - moveit_arm_controller
-    - moveit_robotiq_gripper_controller
+    #- moveit_robotiq_gripper_controller
 
   moveit_arm_controller:
     type: FollowJointTrajectory
@@ -19,9 +19,9 @@ moveit_simple_controller_manager:
       - fr3_joint7
     action_ns: follow_joint_trajectory
     default: true
-  moveit_robotiq_gripper_controller:
-    type: GripperCommand
-    joints:
-      - robotiq_85_left_knuckle_joint
-    action_ns: gripper_cmd
-    default: true
+  # moveit_robotiq_gripper_controller:
+  #   type: GripperCommand
+  #   joints:
+  #     - robotiq_85_left_knuckle_joint
+  #   action_ns: gripper_cmd
+  #   default: true

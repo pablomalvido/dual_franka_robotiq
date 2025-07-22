@@ -260,14 +260,8 @@ def generate_launch_description():
         output='screen'
     )
 
-    gravity_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'inactive',
-                'gravity_compensation_example_controller'],
-        output='screen'
-    )
-
     cartesian_motion_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'inactive',
                 'cartesian_motion_controller'],
         output='screen'
     )
@@ -280,13 +274,13 @@ def generate_launch_description():
 
     moveit_gripper_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-                'robotiq_gripper_controller'],
+                'moveit_robotiq_gripper_controller'],
         output='screen'
     )
 
     moveit_franka_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-                'joint_trajectory_controller'],
+                'moveit_arm_controller'],
         output='screen'
     )
 

@@ -55,6 +55,7 @@ def load_yaml(package_name, file_path):
 
 
 def generate_launch_description():
+    namespace_="robot"
     robot_ip_parameter_name = 'robot_ip'
     use_fake_hardware_parameter_name = 'use_fake_hardware'
     fake_sensor_commands_parameter_name = 'fake_sensor_commands'
@@ -150,7 +151,7 @@ def generate_launch_description():
     run_move_group_node = Node(
         package='moveit_ros_move_group',
         executable='move_group',
-        namespace=namespace,
+        namespace=namespace_,
         output='screen',
         parameters=[
             robot_description,
@@ -187,7 +188,7 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         name='robot_state_publisher',
-        namespace=namespace,
+        namespace=namespace_,
         output='both',
         parameters=[robot_description],
     )
@@ -200,9 +201,9 @@ def generate_launch_description():
     ros2_control_node = Node(
         package='controller_manager',
         executable='ros2_control_node',
-        namespace=namespace,
+        namespace=namespace_,
         parameters=[robot_description, ros2_controllers_path],
-        remappings=[('joint_states', 'franka/joint_states')],
+        #remappings=[('joint_states', 'franka/joint_states')],
         output={
             'stdout': 'screen',
             'stderr': 'screen',
@@ -219,7 +220,7 @@ def generate_launch_description():
                     'ros2', 'run', 'controller_manager', 'spawner', controller,
                     '--controller-manager-timeout', '60',
                     '--controller-manager',
-                    PathJoinSubstitution([namespace, 'controller_manager'])
+                    PathJoinSubstitution([namespace_, 'controller_manager'])
                 ],
                 output='screen'
             )
@@ -229,15 +230,15 @@ def generate_launch_description():
         package='joint_state_publisher',
         executable='joint_state_publisher',
         name='joint_state_publisher',
-        namespace=namespace,
+        #namespace=namespace_,
         parameters=[
-            {'source_list': ['franka/joint_states', '/gripper/joint_states'], 'rate': 30}],
+            {'source_list': ['/robot/joint_states', '/gripper/joint_states'], 'rate': 30}],
     )
 
     franka_robot_state_broadcaster = Node(
         package='controller_manager',
         executable='spawner',
-        namespace=namespace,
+        namespace=namespace_,
         arguments=['franka_robot_state_broadcaster'],
         output='screen',
         condition=UnlessCondition(use_fake_hardware),
@@ -245,13 +246,15 @@ def generate_launch_description():
 
     cartesian_motion_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'inactive',
-                'cartesian_motion_controller'],
+                'cartesian_motion_controller', '--controller-manager',
+                    PathJoinSubstitution([namespace_, 'controller_manager'])],
         output='screen'
     )
 
     joint_impedance_example_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'inactive',
-                'joint_impedance_example_controller'],
+                'joint_impedance_example_controller', '--controller-manager',
+                    PathJoinSubstitution([namespace_, 'controller_manager'])],
         output='screen'
     )
 

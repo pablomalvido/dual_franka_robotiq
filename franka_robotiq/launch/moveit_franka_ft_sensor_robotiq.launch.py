@@ -96,7 +96,7 @@ def generate_launch_description():
             ' ee_id:=robotiq', #franka_hand_str,
             ' gazebo_effort:=false',
             ' use_fake_hardware:=false',
-            ' ft_sensor:=true'])
+            ' ft_sensor:=false'])
 
     robot_description = {'robot_description': ParameterValue(
         robot_description_config, value_type=str)}
@@ -104,7 +104,7 @@ def generate_launch_description():
     franka_semantic_xacro_file = os.path.join(
         get_package_share_directory('franka_robotiq_moveit_config'),
         'config',
-        'fr3_ft_sensor.srdf.xacro'
+        'fr3.srdf.xacro'
     )
 
     robot_description_semantic_config = Command(
@@ -262,7 +262,7 @@ def generate_launch_description():
     )
 
     cartesian_motion_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'inactive',
                 'cartesian_motion_controller'],
         output='screen'
     )
@@ -311,7 +311,7 @@ def generate_launch_description():
         ),
         RegisterEventHandler(
             event_handler=OnProcessExit(
-                target_action=moveit_franka_controller,
+                target_action=load_joint_state_broadcaster,
                 on_exit=[moveit_gripper_controller],
             )
         ),

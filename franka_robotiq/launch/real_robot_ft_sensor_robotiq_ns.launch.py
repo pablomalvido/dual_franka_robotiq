@@ -55,6 +55,24 @@ def load_yaml(package_name, file_path):
 
 
 def generate_launch_description():
+    nodes_gripper = []
+    nodes_gripper.append(
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                PathJoinSubstitution([
+                    FindPackageShare('franka_robotiq'), 'launch', 'robotiq_control_ns.launch.py'
+                ])
+            ),
+        )
+    )
+    
+    ft_sensor_node = Node(
+        package="nordbo_ft_sensors",
+        executable="run",
+        output='screen',
+        remappings=[('nordbo/wrench','cartesian_force_controller/ft_sensor_wrench')]
+    )
+    
     robot_ip_parameter_name = 'robot_ip'
     use_fake_hardware_parameter_name = 'use_fake_hardware'
     fake_sensor_commands_parameter_name = 'fake_sensor_commands'
@@ -74,27 +92,28 @@ def generate_launch_description():
 
     # planning_context
     franka_xacro_file = os.path.join(
-        get_package_share_directory('franka_description'),
-        'robots', 'fr3', 'fr3.urdf.xacro'
+        get_package_share_directory('franka_robotiq'),
+        'urdf', 'fr3_robotiq.urdf.xacro'
     )
 
     robot_description_config = Command(
-        [FindExecutable(name='xacro'), ' ', franka_xacro_file, ' hand:=false',
+        [FindExecutable(name='xacro'), ' ', franka_xacro_file, ' hand:=true',
          ' robot_ip:=', robot_ip, ' use_fake_hardware:=', use_fake_hardware,
-         ' fake_sensor_commands:=', fake_sensor_commands, ' ros2_control:=true'])
+         ' fake_sensor_commands:=', fake_sensor_commands, ' ros2_control:=true', 
+         ' ft_sensor:=true', ' ee_id:="robotiq"', ' hand_control:=false'])
 
     robot_description = {'robot_description': ParameterValue(
         robot_description_config, value_type=str)}
 
     franka_semantic_xacro_file = os.path.join(
-        get_package_share_directory('franka_fr3_moveit_config'),
-        'srdf',
-        'fr3_arm.srdf.xacro'
+        get_package_share_directory('franka_robotiq'),
+        'urdf',
+        'fr3_ft_sensor.srdf.xacro'
     )
 
     robot_description_semantic_config = Command(
         [FindExecutable(name='xacro'), ' ',
-         franka_semantic_xacro_file, ' hand:=false']
+         franka_semantic_xacro_file]
     )
 
     robot_description_semantic = {'robot_description_semantic': ParameterValue(
@@ -165,8 +184,8 @@ def generate_launch_description():
 
     # RViz
     rviz_base = os.path.join(get_package_share_directory(
-        'franka_fr3_moveit_config'), 'rviz')
-    rviz_full_config = os.path.join(rviz_base, 'moveit.rviz')
+        'franka_robotiq'), 'rviz')
+    rviz_full_config = os.path.join(rviz_base, 'moveit_franka_robotiq.rviz')
 
     rviz_node = Node(
         package='rviz2',
@@ -249,6 +268,12 @@ def generate_launch_description():
         output='screen'
     )
 
+    cartesian_force_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'inactive',
+                'cartesian_force_controller'],
+        output='screen'
+    )
+
     joint_impedance_example_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'inactive',
                 'joint_impedance_example_controller'],
@@ -295,6 +320,7 @@ def generate_launch_description():
                           'namespace': namespace}.items(),
     )
     return LaunchDescription(
+        nodes_gripper +
         [robot_arg,
          namespace_arg,
          use_fake_hardware_arg,
@@ -308,7 +334,9 @@ def generate_launch_description():
          franka_robot_state_broadcaster,
          #gripper_launch_file,
          cartesian_motion_controller, 
-         #late_joint_impedance_example_controller
+         cartesian_force_controller, 
+         #late_joint_impedance_example_controller,
+         ft_sensor_node
          ]
         + load_controllers
     )

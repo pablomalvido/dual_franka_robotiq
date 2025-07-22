@@ -74,34 +74,35 @@ def generate_launch_description():
 
     # planning_context
     franka_xacro_file = os.path.join(
-        get_package_share_directory('franka_description'),
-        'robots', 'fr3', 'fr3.urdf.xacro'
+        get_package_share_directory('franka_robotiq'),
+        'urdf', 'fr3_robotiq.urdf.xacro'
     )
 
     robot_description_config = Command(
-        [FindExecutable(name='xacro'), ' ', franka_xacro_file, ' hand:=false',
+        [FindExecutable(name='xacro'), ' ', franka_xacro_file, ' hand:=true',
          ' robot_ip:=', robot_ip, ' use_fake_hardware:=', use_fake_hardware,
-         ' fake_sensor_commands:=', fake_sensor_commands, ' ros2_control:=true'])
+         ' fake_sensor_commands:=', fake_sensor_commands, ' ros2_control:=true', 
+         ' ee_id:=robotiq', ' ft_sensor:=true', ' com_port:=/dev/ttyUSB1'])
 
     robot_description = {'robot_description': ParameterValue(
         robot_description_config, value_type=str)}
 
     franka_semantic_xacro_file = os.path.join(
-        get_package_share_directory('franka_fr3_moveit_config'),
-        'srdf',
-        'fr3_arm.srdf.xacro'
+        get_package_share_directory('franka_robotiq_moveit_config'),
+        'config',
+        'fr3_ft_sensor.srdf.xacro'
     )
 
     robot_description_semantic_config = Command(
         [FindExecutable(name='xacro'), ' ',
-         franka_semantic_xacro_file, ' hand:=false']
+         franka_semantic_xacro_file]
     )
 
     robot_description_semantic = {'robot_description_semantic': ParameterValue(
         robot_description_semantic_config, value_type=str)}
 
     kinematics_yaml = load_yaml(
-        'franka_fr3_moveit_config', 'config/kinematics.yaml'
+        'franka_robotiq_moveit_config', 'config/kinematics.yaml'
     )
 
     # Planning Functionality
@@ -118,13 +119,13 @@ def generate_launch_description():
         }
     }
     ompl_planning_yaml = load_yaml(
-        'franka_fr3_moveit_config', 'config/ompl_planning.yaml'
+        'franka_robotiq_moveit_config', 'config/ompl_planning.yaml'
     )
     ompl_planning_pipeline_config['move_group'].update(ompl_planning_yaml)
 
     # Trajectory Execution Functionality
     moveit_simple_controllers_yaml = load_yaml(
-        'franka_fr3_moveit_config', 'config/fr3_controllers.yaml'
+        'franka_robotiq_moveit_config', 'config/custom_moveit_controllers.yaml'
     )
     moveit_controllers = {
         'moveit_simple_controller_manager': moveit_simple_controllers_yaml,
@@ -165,8 +166,8 @@ def generate_launch_description():
 
     # RViz
     rviz_base = os.path.join(get_package_share_directory(
-        'franka_fr3_moveit_config'), 'rviz')
-    rviz_full_config = os.path.join(rviz_base, 'moveit.rviz')
+        'franka_robotiq_moveit_config'), 'config')
+    rviz_full_config = os.path.join(rviz_base, 'moveit_v2.rviz')
 
     rviz_node = Node(
         package='rviz2',
@@ -195,7 +196,7 @@ def generate_launch_description():
     ros2_controllers_path = os.path.join(
         get_package_share_directory('franka_robotiq'),
         'config',
-        'controllers_repo_version.yaml',
+        'controllers_real_robot.yaml',
     )
     ros2_control_node = Node(
         package='controller_manager',
@@ -212,7 +213,8 @@ def generate_launch_description():
 
     # Load controllers
     load_controllers = []
-    for controller in ['fr3_arm_controller', 'joint_state_broadcaster']:
+    for controller in ['moveit_arm_controller', 'joint_state_broadcaster']:
+        #for controller in ['joint_state_broadcaster']:
         load_controllers.append(
             ExecuteProcess(
                 cmd=[
@@ -231,7 +233,7 @@ def generate_launch_description():
         name='joint_state_publisher',
         namespace=namespace,
         parameters=[
-            {'source_list': ['franka/joint_states', '/gripper/joint_states'], 'rate': 30}],
+            {'source_list': ['franka/joint_states', 'fr3_gripper/joint_states'], 'rate': 30}],
     )
 
     franka_robot_state_broadcaster = Node(
@@ -255,18 +257,17 @@ def generate_launch_description():
         output='screen'
     )
 
-    late_cartesian_motion_controller = RegisterEventHandler(
-        event_handler=OnProcessStart(
-            target_action=ros2_control_node,
-            on_start=[cartesian_motion_controller],
-        )
-    ),
-    late_joint_impedance_example_controller = RegisterEventHandler(
-        event_handler=OnProcessStart(
-            target_action=ros2_control_node,
-            on_start=[joint_impedance_example_controller],
-        )
-    ),
+    robotiq_gripper_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+                'robotiq_gripper_controller'],
+        output='screen'
+    )
+
+    robotiq_activation_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+                'robotiq_activation_controller'],
+        output='screen'
+    )
 
     robot_arg = DeclareLaunchArgument(
         robot_ip_parameter_name,
@@ -276,24 +277,26 @@ def generate_launch_description():
     namespace_arg = DeclareLaunchArgument(
         namespace_parameter_name,
         default_value='',
-        description='Namespace for the robot.'
-    )
+        description='Namespace for the robot.')
+    
     use_fake_hardware_arg = DeclareLaunchArgument(
         use_fake_hardware_parameter_name,
         default_value='false',
         description='Use fake hardware')
+    
     fake_sensor_commands_arg = DeclareLaunchArgument(
         fake_sensor_commands_parameter_name,
         default_value='false',
         description="Fake sensor commands. Only valid when '{}' is true".format(
             use_fake_hardware_parameter_name))
-    gripper_launch_file = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([PathJoinSubstitution(
-            [FindPackageShare('franka_gripper'), 'launch', 'gripper.launch.py'])]),
-        launch_arguments={'robot_ip': robot_ip,
-                          use_fake_hardware_parameter_name: use_fake_hardware,
-                          'namespace': namespace}.items(),
-    )
+    
+    # gripper_launch_file = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource([PathJoinSubstitution(
+    #         [FindPackageShare('franka_gripper'), 'launch', 'gripper.launch.py'])]),
+    #     launch_arguments={'robot_ip': robot_ip,
+    #                       use_fake_hardware_parameter_name: use_fake_hardware,
+    #                       'namespace': namespace}.items(),
+    # )
     return LaunchDescription(
         [robot_arg,
          namespace_arg,
@@ -306,9 +309,9 @@ def generate_launch_description():
          ros2_control_node,
          joint_state_publisher,
          franka_robot_state_broadcaster,
-         #gripper_launch_file,
-         cartesian_motion_controller, 
-         #late_joint_impedance_example_controller
+         #cartesian_motion_controller, 
+         #robotiq_gripper_controller,
+         #robotiq_activation_controller
          ]
-        + load_controllers
+        + load_controllers #moveit_arm controller + joint_state_broadcaster
     )
