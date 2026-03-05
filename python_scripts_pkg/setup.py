@@ -21,7 +21,13 @@ setup(
     entry_points={
         'console_scripts': [
             "interactive_marker_rviz = python_scripts_pkg.interactive_marker_rviz:main",
-            "interactive_marker_rviz2 = python_scripts_pkg.interactive_marker_rviz2:main"
+            "interactive_marker_rviz2 = python_scripts_pkg.interactive_marker_rviz2:main",
+            "velocity_controller_gui = python_scripts_pkg.velocity_controller_gui:main",
+            "force_controller_gui = python_scripts_pkg.force_controller_gui:main",
+            "kaleel_app_test = python_scripts_pkg.kaleel_app_test:main",
+            "kaleel_app_force_impulse = python_scripts_pkg.kaleel_app_force_impulse:main",
+            "aruco_tracker = python_scripts_pkg.aruco_tracker_reference_d455_ros:main",
+            "ses_pretension = python_scripts_pkg.ses_pretension:main"
         ],
         
     },

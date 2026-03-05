@@ -17,8 +17,8 @@ controller_manager:
     moveit_robotiq_gripper_controller:
       type: position_controllers/GripperActionController
 
-    gravity_compensation_example_controller:
-      type: franka_example_controllers/GravityCompensationExampleController
+    cartesian_velocity_example_controller:
+      type: franka_example_controllers/CartesianVelocityExampleController
 
     cartesian_motion_controller:
       type: cartesian_motion_controller/CartesianMotionController
@@ -28,6 +28,9 @@ controller_manager:
 
     cartesian_force_controller:
       type: cartesian_force_controller/CartesianForceController
+
+    robotiq_gripper_controller:
+      type: position_controllers/GripperActionController
 
 
 cartesian_motion_controller:
@@ -98,6 +101,10 @@ cartesian_force_controller:
         rot_z: {p: 1.5}
 
 
+cartesian_velocity_example_controller:
+  ros__parameters:
+    arm_id: "fr3"  
+
 moveit_robotiq_gripper_controller:
   ros__parameters:
     default: true
@@ -159,3 +166,10 @@ moveit_arm_controller:
     #     fr3_joint5: { p: 250., d: 10., i: 0., i_clamp: 1. }
     #     fr3_joint6: { p: 150., d: 10., i: 0., i_clamp: 1. }
     #     fr3_joint7: { p: 50., d: 5., i: 0., i_clamp: 1. }
+
+robotiq_gripper_controller:
+  ros__parameters:
+    default: true
+    joint: robotiq_85_left_knuckle_joint
+    use_effort_interface: true
+    use_speed_interface: true

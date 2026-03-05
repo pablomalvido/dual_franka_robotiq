@@ -336,7 +336,7 @@ def generate_launch_description():
          cartesian_motion_controller, 
          cartesian_force_controller, 
          #late_joint_impedance_example_controller,
-         ft_sensor_node
+         #ft_sensor_node
          ]
         + load_controllers
     )

@@ -1,0 +1,44 @@
+# SES Controller Configuration - Experiment 2 (Visual Occlusion)
+# These parameters can be modified without rebuilding the package.
+# If a parameter is not specified here, the default value in the code will be used.
+
+# Controller timing
+dt: 0.05
+max_steps: 2000
+num_modes: 15
+
+# Parameter Bounds relative to the EE initial position
+K_MIN_rel: -0.01    # X minimum offset
+K_MAX_rel: 0.15    # X maximum offset
+L1_MIN_rel: -0.12    # Z minimum offset
+L1_MAX_rel: 0.15    # Z maximum offset
+
+# Visualization settings
+enable_visualization: true
+viz_update_rate: 5  # Update visualization every N steps
+
+# Progress-Variable Dynamics
+gate_gamma: 5.0
+gate_E_ref: 0.1
+
+# Temperature schedule: θ(s) = θ_0 / ln(e + λ_θ s)
+theta_0: 5.0
+lambda_theta: 10.0
+
+# Memory schedule: T(s) = T_0 * exp(-λ_T s)
+T_0: 15.0
+lambda_T: 0.1
+
+# Mixing dynamics: dα/dt = κ_α θ(s)^2 ρ(E)
+kappa_alpha: 0.02
+
+# Sobolev exponent
+s_sobolev: 1.3
+
+# Bayesian Parameters
+sigma_apriori: 0.25
+sigma_meas_norm: 0.01
+sigma_likelihood: 0.01
+
+# Grid Setup
+N_grid: 200

@@ -59,6 +59,33 @@
         <joint name="fr3_joint6" value="2.5636"/>
         <joint name="fr3_joint7" value="1.283"/>
     </group_state>
+    <group_state name="ready" group="fr3_arm">
+        <joint name="fr3_joint1" value="0"/>
+        <joint name="fr3_joint2" value="-0.785"/>
+        <joint name="fr3_joint3" value="0"/>
+        <joint name="fr3_joint4" value="-2.356"/>
+        <joint name="fr3_joint5" value="0"/>
+        <joint name="fr3_joint6" value="1.571"/>
+        <joint name="fr3_joint7" value="0.785"/>
+    </group_state>
+    <group_state name="ready_kaleel" group="fr3_arm">
+        <joint name="fr3_joint1" value="0.0019290960160640493"/>
+        <joint name="fr3_joint2" value="-0.07429991145403866"/>
+        <joint name="fr3_joint3" value="0.0009094689629045991"/>
+        <joint name="fr3_joint4" value="-2.7644865457325847"/>
+        <joint name="fr3_joint5" value="-0.0015472140117172208"/>
+        <joint name="fr3_joint6" value="2.686926798618501"/>
+        <joint name="fr3_joint7" value="0.7922321460407836"/>
+    </group_state>
+    <group_state name="ready_ses_rod" group="fr3_arm">
+        <joint name="fr3_joint1" value="0.36431833142346814"/>
+        <joint name="fr3_joint2" value="-0.19478917595231374"/>
+        <joint name="fr3_joint3" value="-0.0069491493639888486"/>
+        <joint name="fr3_joint4" value="-2.1238954117435624"/>
+        <joint name="fr3_joint5" value="-0.002320934374129336"/>
+        <joint name="fr3_joint6" value="1.912285393484237"/>
+        <joint name="fr3_joint7" value="1.1365761522738094"/>
+    </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->

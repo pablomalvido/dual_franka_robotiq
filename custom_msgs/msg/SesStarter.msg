@@ -1,0 +1,2 @@
+geometry_msgs/Point start_position
+geometry_msgs/PoseArray ses_target

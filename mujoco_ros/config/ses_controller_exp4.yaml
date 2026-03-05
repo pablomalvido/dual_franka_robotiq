@@ -1,0 +1,76 @@
+# Experiment 4: Ring Position Servo Control Configuration
+# Controls ring position on vertical pole via elastic tether:
+#   Robot EE → Elastic Tether → Ring (slides on pole)
+# Error: |ring_z - target_z|
+
+# =============================
+# TASK-SPECIFIC PARAMETERS
+# =============================
+
+# Ring target position (relative to slide joint center, in meters)
+# Slide joint range: [-0.30, 0.30]m
+ring_target_z: 0.15   # Target Z position for ring (positive = up)
+
+# Tendon/Tether parameters (for reference - actual values set in XML)
+# These can be used to document the scene configuration
+# tendon_stiffness: 100.0
+# tendon_damping: 5.0
+# tendon_rest_length: 0.0
+# tendon_range_max: 0.8
+
+# =============================
+# CONTROLLER TIMING
+# =============================
+dt: 0.05              # Control timestep in seconds
+max_steps: 4000       # Maximum control steps (3000 * 0.05 = 150s)
+
+# =============================
+# EE CONTROL BOUNDS
+# =============================
+# Relative to initial EE position (m)
+# The controller moves the EE in the XZ plane to control ring position
+K_MIN_rel: -0.4      # Minimum X offset from initial
+K_MAX_rel: 0.33       # Maximum X offset from initial
+L1_MIN_rel: -0.35     # Minimum Z offset from initial
+L1_MAX_rel: 0.22      # Maximum Z offset from initial
+
+# =============================
+# ERGODIC CONTROL PARAMETERS
+# =============================
+
+# Gate/Progress Parameters
+gate_gamma: 5.0       # Gate sharpness (higher = sharper transition)
+gate_E_ref: 0.1       # Reference ergodic energy for gate
+
+# Temperature Schedule (exploration vs exploitation)
+theta_0: 5.0          # Initial temperature (higher = more exploration)
+lambda_theta: 20.0    # Temperature decay rate
+
+# Memory Schedule (sliding window for trajectory averaging)
+T_0: 15.0             # Initial memory window (seconds)
+lambda_T: 0.1         # Memory decay rate
+
+# Mixing Dynamics (prior vs observed distribution)
+kappa_alpha: 0.02     # Mixing rate coefficient
+
+# Sobolev Exponent (spectral weighting)
+s_sobolev: 1.4        # Higher = smoother trajectories
+
+# =============================
+# BAYESIAN UPDATE PARAMETERS
+# =============================
+sigma_apriori: 0.25   # Prior spread
+sigma_meas_norm: 0.02 # Measurement kernel width (normalized coords)
+sigma_likelihood: 0.01
+
+# =============================
+# GRID AND SPECTRAL RESOLUTION
+# =============================
+N_grid: 100           # Grid points per dimension
+num_modes: 15         # Fourier modes per dimension (total = num_modes^2)
+
+# =============================
+# VISUALIZATION
+# =============================
+enable_visualization: true
+viz_update_rate: 5    # Update visualization every N steps

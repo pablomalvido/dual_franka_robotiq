@@ -74,7 +74,7 @@
       <joint name="link8_ft_sensor_joint" type="fixed">
         <parent link="${connection}"/>
         <child link="${arm_prefix_modified + 'pre_ft_sensor_link'}"/>
-        <origin xyz="0 0 0.01" rpy="0 0 0"/>
+        <origin xyz="0 0 0.01" rpy="0 0 0.7854"/>
       </joint>
 
       <joint name="pre_ft_sensor_joint" type="fixed">
@@ -98,7 +98,7 @@
       <joint name="tool0_joint" type="fixed">
         <parent link="${arm_prefix_modified + 'coupling_robotiq_link'}"/>
         <child link="${arm_prefix_modified + 'tool0'}"/>
-        <origin xyz="0 0 0.00695" rpy="0 0 0.7854"/>
+        <origin xyz="0 0 0.00695" rpy="0 0 0"/>
       </joint>
 
       <link name="${arm_prefix_modified + 'pre_ft_sensor_link'}">

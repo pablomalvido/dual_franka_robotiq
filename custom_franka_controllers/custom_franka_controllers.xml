@@ -1,0 +1,32 @@
+<library path="custom_franka_controllers">
+    <class name="custom_franka_controllers/CartesianVelocityExampleController"
+           type="custom_franka_controllers::CartesianVelocityExampleController" base_class_type="controller_interface::ControllerInterface">
+        <description>
+            The cartesian velocity example controller commands linear velocity with x and z components.
+        </description>
+    </class>
+    <class name="custom_franka_controllers/CartesianForceToVelocityController"
+           type="custom_franka_controllers::CartesianForceToVelocityController" base_class_type="controller_interface::ControllerInterface">
+        <description>
+            The cartesian force to velocity controller commands linear velocity to reach a certain target force.
+        </description>
+    </class>
+    <class name="custom_franka_controllers/CartesianAccelerationController"
+           type="custom_franka_controllers::CartesianAccelerationController" base_class_type="controller_interface::ControllerInterface">
+        <description>
+            The cartesian acceleration example controller commands linear acceleration with x, y, and z components.
+        </description>
+    </class>
+    <class name="custom_franka_controllers/CartesianVelocityControllerSES"
+           type="custom_franka_controllers::CartesianVelocityControllerSES" base_class_type="controller_interface::ControllerInterface">
+        <description>
+            The cartesian velocity example controller commands linear velocity with x, y, and z components.
+        </description>
+    </class>
+    <class name="custom_franka_controllers/CartesianForceController"
+           type="custom_franka_controllers::CartesianForceController" base_class_type="controller_interface::ControllerInterface">
+        <description>
+            The cartesian force example controller commands linear force with x, y, and z components.
+        </description>
+    </class>
+</library>

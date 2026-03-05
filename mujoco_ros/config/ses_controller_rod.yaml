@@ -1,0 +1,48 @@
+# SES Controller Configuration - Rod Experiment
+# These parameters can be modified without rebuilding the package.
+# If a parameter is not specified here, the default value in the code will be used.
+
+# Controller timing
+dt: 0.05
+max_steps: 1500
+num_modes: 15
+
+# Parameter Bounds relative to the EE initial position
+# The domain is a rectangle in the cartesian plane XZ
+K_MIN_rel: -0.01    # X minimum offset
+K_MAX_rel: 0.3      # X maximum offset
+L1_MIN_rel: -0.15   # Z minimum offset
+L1_MAX_rel: 0.04    # Z maximum offset
+
+# Monitored rod node indexes (from 0 to 9)
+s_feat: [4, 6, 8]
+
+# Real feature targets (X and Z coordinates for each monitored node)
+r_targ_x: [0.4429216, 0.56032489, 0.6120708]
+r_targ_z: [0.29464233, 0.38736954, 0.46863059]
+
+# Progress-Variable Dynamics
+gate_gamma: 5.0
+gate_E_ref: 0.1     # Threshold for ergodic exploration
+
+# Temperature schedule: θ(s) = θ_0 / ln(e + λ_θ s)
+theta_0: 5.0
+lambda_theta: 10.0
+
+# Memory schedule: T(s) = T_0 * exp(-λ_T s)
+T_0: 15.0
+lambda_T: 0.1
+
+# Mixing dynamics: dα/dt = κ_α θ(s)^2 ρ(E)
+kappa_alpha: 0.03
+
+# Sobolev exponent
+s_sobolev: 1.5
+
+# Bayesian Parameters
+sigma_apriori: 0.25
+sigma_meas_norm: 0.01
+sigma_likelihood: 0.01
+
+# Grid Setup
+N_grid: 200

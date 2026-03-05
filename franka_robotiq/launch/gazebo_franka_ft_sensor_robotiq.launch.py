@@ -149,9 +149,9 @@ def generate_launch_description():
         output='screen'
     )
 
-    gravity_controller = ExecuteProcess(
+    cartesian_velocity_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'inactive',
-                'gravity_compensation_example_controller'],
+                'cartesian_velocity_example_controller'],
         output='screen'
     )
 
@@ -209,7 +209,7 @@ def generate_launch_description():
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=cartesian_motion_controller,
-                on_exit=[gravity_controller],
+                on_exit=[cartesian_velocity_controller],
             )
         ),
         RegisterEventHandler(

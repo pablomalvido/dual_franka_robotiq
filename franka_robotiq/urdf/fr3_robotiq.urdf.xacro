@@ -18,7 +18,7 @@
   <xacro:arg name="arm_prefix" default=""/>
 
   <!-- Should an end-effector be mounted at the flange?" -->
-  <xacro:arg name="hand" default="true" />
+  <xacro:arg name="hand" default="false" />
   <xacro:arg name="hand_control" default="true" />
 
   <!-- Which end-effector would be mounted at the flange?" -->

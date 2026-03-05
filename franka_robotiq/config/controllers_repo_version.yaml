@@ -18,8 +18,17 @@
       joint_impedance_example_controller:
         type: franka_example_controllers/JointImpedanceExampleController
 
+      cartesian_velocity_example_controller:
+        type: custom_franka_controllers/CartesianVelocityExampleController
+
+      cartesian_acceleration_controller:
+        type: custom_franka_controllers/CartesianAccelerationController
+
       cartesian_force_controller:
-        type: cartesian_force_controller/CartesianForceController
+        type: custom_franka_controllers/CartesianForceController
+
+      cartesian_velocity_controller_ses:
+        type: custom_franka_controllers/CartesianVelocityControllerSES
 
 /**:
   franka_robot_state_broadcaster:
@@ -90,40 +99,6 @@
           rot_z: {p: 0.5}
 
 /**:
-  cartesian_force_controller:
-    ros__parameters:
-
-      # See the cartesian_compliance_controller
-      end_effector_link: "tcp"
-      robot_base_link: "fr3_link0"
-      ft_sensor_ref_link: "nordbo_ft_sensor_link"
-      joints:
-        - fr3_joint1
-        - fr3_joint2
-        - fr3_joint3
-        - fr3_joint4
-        - fr3_joint5
-        - fr3_joint6
-        - fr3_joint7
-
-      # See the cartesian_compliance_controller
-      command_interfaces:
-        - position
-        #- velocity
-
-      solver:
-          error_scale: 0.5
-          publish_state_feedback: True
-
-      pd_gains:
-          trans_x: {p: 0.05}
-          trans_y: {p: 0.05}
-          trans_z: {p: 0.05}
-          rot_x: {p: 1.5}
-          rot_y: {p: 1.5}
-          rot_z: {p: 1.5}
-
-/**:
   joint_impedance_example_controller:
     ros__parameters:
       k_gains:
@@ -142,3 +117,23 @@
         - 1.0
         - 1.0
         - 0.5
+
+/**:
+  cartesian_velocity_example_controller:
+    ros__parameters:
+      arm_id: "fr3"   
+
+/**:
+  cartesian_acceleration_controller:
+    ros__parameters:
+      arm_id: "fr3"   
+
+/**:
+  cartesian_force_controller:
+    ros__parameters:
+      arm_id: "fr3"   
+
+/**:
+  cartesian_velocity_controller_ses:
+    ros__parameters:
+      arm_id: "fr3" 
