@@ -188,8 +188,9 @@ class ChainErgodicServoingProgressDriven(Node):
             y = marker.pose.position.y #Note: We use y as z because for the camera z is the depth axis
             marker_id = marker.id
             # Fill all features
-            self.r_feat_all[0, marker_id] = x
-            self.r_feat_all[1, marker_id] = y
+            if marker_id <= 2:
+                self.r_feat_all[0, marker_id] = x
+                self.r_feat_all[1, marker_id] = y
         # Fill r_feat with only selected features
         # self.s_feat contains marker IDs
         for f_idx, marker_id in enumerate(self.s_feat):
@@ -265,7 +266,7 @@ class ChainErgodicServoingProgressDriven(Node):
         Phi /= np.sum(Phi)
         return Phi
 
-    def _load_prior(self, filename="/home/rosdev/ros2_ws/src/mujoco_ros/data/exp5/P_Obs_Refined.npy"):
+    def _load_prior(self, filename="/ros2_ws/src/developments/dual_franka_robotiq/mujoco_ros/data/exp1_real/P_Obs_Refined.npy"):
         if os.path.exists(filename):
             print(f"Loading distribution from {filename}")
             return np.load(filename)
@@ -606,15 +607,15 @@ class ChainErgodicServoingProgressDriven(Node):
         ax_system = fig.add_subplot(gs[0:2, 0:2])
                 
         ## Real system
-        ax_system.plot(self.r_targ[0], self.r_targ[1], 'gX', 
+        ax_system.plot(self.r_targ[0], -self.r_targ[1], 'gX', 
                     markersize=12, markeredgewidth=2.5, label='Target Features', zorder=5)
-        ax_system.plot(self.r_feat_all[0], self.r_feat_all[1], 'bo', markersize=8, markeredgewidth=2,
+        ax_system.plot(self.r_feat_all[0], -self.r_feat_all[1], 'bo', markersize=8, markeredgewidth=2,
                         fillstyle='none', label='Real Features')
-        ax_system.plot(self.r_feat[0], self.r_feat[1], 'ro', markersize=8, markeredgewidth=2,
+        ax_system.plot(self.r_feat[0], -self.r_feat[1], 'ro', markersize=8, markeredgewidth=2,
                         fillstyle='none', label='Real tracked Features')
         
-        ax_system.set_xlim([0.35, 0.9]) #We only push forward and the base is at 0.45m
-        ax_system.set_ylim([0.3, 0.8]) #The beam height is 0.55m
+        ax_system.set_xlim([-0.1, 0.25]) #We only push forward and the base is at 0.45m
+        ax_system.set_ylim([-0.1, 0.3]) #The beam height is 0.55m
         ax_system.set_aspect('equal')
         ax_system.grid(True, alpha=0.3, linestyle='--')
         ax_system.legend(loc='upper left', fontsize=9, framealpha=0.9)
@@ -736,11 +737,11 @@ class ChainErgodicServoingProgressDriven(Node):
         ax_traj.set_title('(h) Target + Trajectory', fontsize=10, fontweight='bold')
         plt.colorbar(im4, ax=ax_traj, fraction=0.046, pad=0.04)
         
-        plt.savefig('/home/rosdev/ros2_ws/src/mujoco_ros/data/exp5/progress_ergodic_paper_figure.png', dpi=300, bbox_inches='tight')
+        plt.savefig('/ros2_ws/src/developments/dual_franka_robotiq/mujoco_ros/data/exp1_real/progress_ergodic_paper_figure.png', dpi=300, bbox_inches='tight')
         plt.close()
 
 
-    def save_logs_to_json(self, filename="/home/rosdev/ros2_ws/src/mujoco_ros/data/exp5/logged_data.json"):
+    def save_logs_to_json(self, filename="/ros2_ws/src/developments/dual_franka_robotiq/mujoco_ros/data/exp1_real/logged_data.json"):
         """
         Save self.logs dictionary into a JSON file.
         Converts numpy types to native Python types for compatibility.
@@ -767,7 +768,7 @@ class ChainErgodicServoingProgressDriven(Node):
         print(f"Logs saved to {filename}")
 
 
-    def save_distribution(self, P_Obs_Refined, filename="/home/rosdev/ros2_ws/src/mujoco_ros/data/exp5/P_Obs_Refined.npy"):
+    def save_distribution(self, P_Obs_Refined, filename="/ros2_ws/src/developments/dual_franka_robotiq/mujoco_ros/data/exp1_real/P_Obs_Refined.npy"):
         """Save discovered distribution."""
         np.save(filename, P_Obs_Refined)
         print(f"Saved distribution to {filename}")
@@ -776,7 +777,7 @@ class ChainErgodicServoingProgressDriven(Node):
 def main():
     rclpy.init()
     ses_node = ChainErgodicServoingProgressDriven()
-    print("Experiment 5 Controller initialized. Waiting for simulation...")
+    print("Experiment 1 real Controller initialized. Waiting for simulation...")
     try:
         rclpy.spin(ses_node)   # <-- runs until node is killed
     except KeyboardInterrupt:

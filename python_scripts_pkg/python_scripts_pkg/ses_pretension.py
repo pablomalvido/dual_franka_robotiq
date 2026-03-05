@@ -25,7 +25,7 @@ class SESPretension(Node):
             (0.15, -0.23),
             (0.1, -0.1),
             (0.05, 0.03)])
-        self.ee_length = 0.17
+        self.ee_length = 0.0
 
         self.write_data = False
 
@@ -33,7 +33,7 @@ class SESPretension(Node):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
         self.base_frame = 'fr3_link0'
-        self.ee_frame = 'fr3_link8'
+        self.ee_frame = 'nordbo_ft_sensor_link' #'fr3_link8'
 
         self.cli_switch_controller = self.create_client(SwitchController, 'controller_manager/switch_controller')
         self.cartesian_speed_controller_target_pub = self.create_publisher(Vector3, '/cartesian_velocity_controller_ses/target_speed', 10)

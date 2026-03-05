@@ -6,7 +6,7 @@ from rclpy.node import Node
 from visualization_msgs.msg import InteractiveMarkerControl, InteractiveMarker, Marker, InteractiveMarkerFeedback
 from interactive_markers.interactive_marker_server import InteractiveMarkerServer
 from tf2_ros import Buffer, TransformListener
-from geometry_msgs.msg import TransformStamped, Pose, PoseStamped
+from geometry_msgs.msg import TransformStamped, Pose, PoseStamped, Vector3
 from std_msgs.msg import *
 
 
@@ -41,7 +41,8 @@ class InteractiveMarkerDemo(Node):
         if not self.init_pose_success:
             try:
                 #now = rclpy.time.Time()
-                self.trans = self.tf_buffer.lookup_transform(self.prefix+'fr3_link0', self.prefix+'fr3_link8', time=rclpy.time.Time())
+                #self.trans = self.tf_buffer.lookup_transform(self.prefix+'fr3_link0', self.prefix+'fr3_link8', time=rclpy.time.Time())
+                self.trans = self.tf_buffer.lookup_transform(self.prefix+'fr3_link0', self.prefix+'nordbo_ft_sensor_link', time=rclpy.time.Time())
                 self.get_logger().info(f"Link pose: translation={self.trans.transform.translation}")
                 self.init_pose_success = True
             except Exception as e:
@@ -99,6 +100,7 @@ class InteractiveMarkerDemo(Node):
         self.server.applyChanges()
         #print(self.int_marker)
         self.target_publisher = self.create_publisher(PoseStamped, self.ns+'/'+self.prefix+'cartesian_motion_controller/target_frame', 10)
+        self.target_controller_publisher = self.create_publisher(Vector3, '/cartesian_velocity_controller_ses/target_pos', 10)
         self.marker_subscription = self.create_subscription(InteractiveMarkerFeedback, self.ns+"/"+self.prefix+"simple_marker/feedback", self.marker_callback,10)
         #self.marker_subscription
     
@@ -110,6 +112,13 @@ class InteractiveMarkerDemo(Node):
         header.frame_id = self.prefix+"fr3_link0"
         msg.header = header
         self.target_publisher.publish(msg)
+
+        # Also publish the target position as a Vector3 for the cartesian velocity controller
+        target_pos = Vector3()
+        target_pos.x = marker_pose.position.x
+        target_pos.y = marker_pose.position.y
+        target_pos.z = marker_pose.position.z
+        self.target_controller_publisher.publish(target_pos)
 
 
     def process_feedback(self, feedback):

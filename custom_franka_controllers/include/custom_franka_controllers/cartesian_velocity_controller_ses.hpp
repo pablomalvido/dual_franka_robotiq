@@ -68,10 +68,10 @@ class CartesianVelocityControllerSES : public controller_interface::ControllerIn
   std::atomic<double> z_target_{0.0};
 
   // Maximum allowed values (limits)
-  const double max_vx_ = 0.3;
+  const double max_vx_ = 0.2;
   const double max_vy_ = 0.1;
-  const double max_vz_ = 0.3;
-  const double kp = 50.0;
+  const double max_vz_ = 0.2;
+  const double kp = 2.0;
 
   // Smoothed current command velocities
   double vx_cmd_ = 0.0;

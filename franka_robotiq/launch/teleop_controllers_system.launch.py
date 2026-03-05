@@ -66,7 +66,7 @@ def generate_launch_description():
     #     IncludeLaunchDescription(
     #         PythonLaunchDescriptionSource(
     #             PathJoinSubstitution([
-    #                 FindPackageShare('franka_robotiq'), 'launch', 'gripper/robotiq_control_ns.launch.py'
+    #                 FindPackageShare('franka_robotiq'), 'launch', 'gripper', 'robotiq_control_ns.launch.py'
     #             ])
     #         ),
     #     )
@@ -238,12 +238,27 @@ def generate_launch_description():
     )
 
     # Load controllers
-    load_controllers = []
-    for controller in ['fr3_arm_controller', 'joint_state_broadcaster']:
-        load_controllers.append(
+    load_active_controllers = []
+    for controller in ['joint_state_broadcaster','cartesian_velocity_controller_ses']:
+        load_active_controllers.append(
             ExecuteProcess(
                 cmd=[
                     'ros2', 'run', 'controller_manager', 'spawner', controller,
+                    '--controller-manager-timeout', '60',
+                    '--controller-manager',
+                    PathJoinSubstitution([namespace, 'controller_manager'])
+                ],
+                output='screen'
+            )
+        )
+
+    load_inactive_controllers = []
+    for controller in ['fr3_arm_controller']:
+        load_inactive_controllers.append(
+            ExecuteProcess(
+                cmd=[
+                    'ros2', 'run', 'controller_manager', 'spawner', controller,
+                    '--inactive',
                     '--controller-manager-timeout', '60',
                     '--controller-manager',
                     PathJoinSubstitution([namespace, 'controller_manager'])
@@ -268,19 +283,6 @@ def generate_launch_description():
         arguments=['franka_robot_state_broadcaster'],
         output='screen',
         condition=UnlessCondition(use_fake_hardware),
-    )
-
-    cartesian_velocity_controller_ses = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'inactive',
-                'cartesian_velocity_controller_ses'],
-        output='screen'
-    )
-
-    aruco_tracker = Node(
-        package='python_scripts_pkg',
-        executable='aruco_tracker',
-        name='aruco_tracker',
-        output='screen',
     )
 
     robot_arg = DeclareLaunchArgument(
@@ -323,9 +325,7 @@ def generate_launch_description():
          joint_state_publisher,
          franka_robot_state_broadcaster,
          #gripper_launch_file,
-         cartesian_velocity_controller_ses, 
          ft_sensor_node,
-         aruco_tracker
          ]
-        + load_controllers
+        + load_active_controllers + load_inactive_controllers
     )

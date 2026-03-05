@@ -4,7 +4,7 @@
 
 # Controller timing
 dt: 0.05
-max_steps: 2000
+max_steps: 1700
 num_modes: 15
 
 # Parameter Bounds relative to the EE initial position
