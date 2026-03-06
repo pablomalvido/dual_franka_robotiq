@@ -28,7 +28,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'ses_exp1 = mujoco_ros.ses_controller_real_exp1:main'
+            'ses_exp1 = mujoco_ros.ses_controller_real_exp1:main',
+            'ses_exp2 = mujoco_ros.ses_controller_real_exp2:main'
         ],
     },
 )

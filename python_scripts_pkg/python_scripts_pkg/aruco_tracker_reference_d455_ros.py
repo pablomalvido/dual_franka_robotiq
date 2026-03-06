@@ -22,7 +22,7 @@ class ArucoPublisher(Node):
             10)
 
         self.latest_target_poses = None
-        #self.default_ref_pose() #Generate a default pose
+        self.default_ref_pose() #Generate a default pose
 
         # Distance threshold (meters)
         self.distance_threshold = 0.05 #m
@@ -54,10 +54,20 @@ class ArucoPublisher(Node):
         self.latest_target_poses.header.frame_id = "camera_link"
         self.latest_target_poses.header.stamp = self.get_clock().now().to_msg()
 
-        default_positions = [
-            (0.15, -0.23, 0.0),
-            (0.1, -0.1, 0.0),
-            (0.05, 0.03, 0.0)
+        # default_positions = [
+        #     (0.15, -0.23, 0.0),
+        #     (0.1, -0.1, 0.0),
+        #     (0.05, 0.03, 0.0)
+        # ]
+        # default_positions = [
+        #     (0.2, -0.16, 0.0),
+        #     (0.05, -0.1, 0.0),
+        #     (0.01, 0.03, 0.0)
+        # ]
+        default_positions = [ #Chain
+            (-0.08, -0.23, 0.0),
+            (0.01, -0.16, 0.0),
+            (0.09, 0.01, 0.0)
         ]
 
         for pos in default_positions:

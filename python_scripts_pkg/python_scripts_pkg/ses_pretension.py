@@ -19,12 +19,25 @@ class SESPretension(Node):
 
         self.log = []
         self.log_pos = []
-        self.F_pretense = 2
         self.pretense = False
+        
+        ## EXP1: TPU beam
+        # self.F_pretense = 2
+        # self.ses_target = self.define_target_msg([
+        #     (0.15, -0.23),
+        #     (0.1, -0.1),
+        #     (0.05, 0.03)])
+        # self.ses_target = self.define_target_msg([
+        #     (0.2, -0.16),
+        #     (0.05, -0.1),
+        #     (0.01, 0.03)])
+        
+        ## EXP2: Chain
+        self.F_pretense = 1.5
         self.ses_target = self.define_target_msg([
-            (0.15, -0.23),
-            (0.1, -0.1),
-            (0.05, 0.03)])
+            (-0.08, -0.23),
+            (0.01, -0.16),
+            (0.09, 0.01)])
         self.ee_length = 0.0
 
         self.write_data = False
