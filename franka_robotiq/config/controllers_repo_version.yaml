@@ -30,6 +30,9 @@
       cartesian_velocity_controller_ses:
         type: custom_franka_controllers/CartesianVelocityControllerSES
 
+      joint_impedance_ik_controller:
+        type: custom_franka_controllers/JointImpedanceIKController
+
 /**:
   franka_robot_state_broadcaster:
     ros__parameters:
@@ -137,3 +140,26 @@
   cartesian_velocity_controller_ses:
     ros__parameters:
       arm_id: "fr3" 
+
+/**:
+  joint_impedance_ik_controller:
+    ros__parameters:
+      arm_id: "fr3"
+      load_gripper: "false"
+      arm_mounting_orientation: [0.0, 0.0, 0.0]
+      k_gains:
+        - 150.0
+        - 150.0
+        - 150.0
+        - 150.0
+        - 62.5
+        - 37.5
+        - 12.5
+      d_gains:
+        - 7.0
+        - 7.0
+        - 7.0
+        - 7.0
+        - 2.0
+        - 2.0
+        - 1.0

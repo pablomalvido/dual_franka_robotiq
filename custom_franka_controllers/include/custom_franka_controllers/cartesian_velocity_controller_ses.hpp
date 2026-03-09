@@ -52,7 +52,6 @@ class CartesianVelocityControllerSES : public controller_interface::ControllerIn
   Eigen::Vector3d position_; //
 
   const double k_time_max_{4.0};
-  const double k_v_max_{0.05};
   const double k_angle_{M_PI / 4.0};
   const bool k_elbow_activated_{false};
 
@@ -60,9 +59,12 @@ class CartesianVelocityControllerSES : public controller_interface::ControllerIn
   rclcpp::Duration elapsed_time_ = rclcpp::Duration(0, 0);
 
   // Target velocity values (from topic subscriber)
-  std::atomic<double> vx_target_{0.0};
-  std::atomic<double> vy_target_{0.0};
-  std::atomic<double> vz_target_{0.0};
+//   std::atomic<double> vx_target_{0.0};
+//   std::atomic<double> vy_target_{0.0};
+//   std::atomic<double> vz_target_{0.0};
+  double vx_target_ = 0.0;
+  double vy_target_ = 0.0;
+  double vz_target_ = 0.0;
   std::atomic<double> x_target_{0.0};
   std::atomic<double> y_target_{0.0};
   std::atomic<double> z_target_{0.0};
@@ -71,6 +73,7 @@ class CartesianVelocityControllerSES : public controller_interface::ControllerIn
   const double max_vx_ = 0.2;
   const double max_vy_ = 0.1;
   const double max_vz_ = 0.2;
+  const double k_v_max_ = 0.3;
   const double kp = 2.0;
 
   // Smoothed current command velocities
@@ -87,6 +90,8 @@ class CartesianVelocityControllerSES : public controller_interface::ControllerIn
 
   void targetPosCallback(const geometry_msgs::msg::Vector3::SharedPtr target);
   rclcpp::Subscription<geometry_msgs::msg::Vector3>::SharedPtr target_pos_subscr_;
+
+  void limitVelocity(double& vx, double& vy, double& vz, double v_max);
 
   bool isActive() const { return m_active; };
   bool m_active = {false};

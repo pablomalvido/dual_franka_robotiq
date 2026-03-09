@@ -11,7 +11,7 @@ num_modes: 15
 K_MIN_rel: -0.01    # X minimum offset
 K_MAX_rel: 0.45    # X maximum offset
 L1_MIN_rel: -0.06    # Z minimum offset
-L1_MAX_rel: 0.16    # Z maximum offset
+L1_MAX_rel: 0.30 #0.16   # Z maximum offset
 
 # Visualization settings
 enable_visualization: true

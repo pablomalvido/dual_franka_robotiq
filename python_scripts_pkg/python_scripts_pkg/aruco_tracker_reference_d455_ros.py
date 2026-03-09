@@ -22,7 +22,7 @@ class ArucoPublisher(Node):
             10)
 
         self.latest_target_poses = None
-        self.default_ref_pose() #Generate a default pose
+        #self.default_ref_pose() #Generate a default pose
 
         # Distance threshold (meters)
         self.distance_threshold = 0.05 #m

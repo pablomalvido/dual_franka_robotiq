@@ -34,10 +34,19 @@ class SESPretension(Node):
         
         ## EXP2: Chain
         self.F_pretense = 1.5
+        # self.ses_target = self.define_target_msg([
+        #     (-0.08, -0.23),
+        #     (0.01, -0.16),
+        #     (0.09, 0.01)])
+        # self.ses_target = self.define_target_msg([
+        #     (0.0, -0.26),
+        #     (0.0, -0.12),
+        #     (0.0, 0.03)])
         self.ses_target = self.define_target_msg([
-            (-0.08, -0.23),
-            (0.01, -0.16),
-            (0.09, 0.01)])
+            (-0.04, -0.23),
+            (0.02, -0.09),
+            (0.02, 0.07)])
+        
         self.ee_length = 0.0
 
         self.write_data = False

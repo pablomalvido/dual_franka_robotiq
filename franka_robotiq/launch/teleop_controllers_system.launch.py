@@ -253,7 +253,7 @@ def generate_launch_description():
         )
 
     load_inactive_controllers = []
-    for controller in ['fr3_arm_controller']:
+    for controller in ['fr3_arm_controller', 'joint_impedance_ik_controller']:
         load_inactive_controllers.append(
             ExecuteProcess(
                 cmd=[

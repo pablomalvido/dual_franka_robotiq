@@ -37,7 +37,8 @@ add_library(
         src/cartesian_velocity_controller_ses.cpp
         src/cartesian_force_to_velocity_controller.cpp
         src/cartesian_acceleration_controller.cpp
-        src/cartesian_force_controller.cpp)
+        src/cartesian_force_controller.cpp
+        src/joint_impedance_ik_controller.cpp)
 target_include_directories(
         ${PROJECT_NAME}
         PUBLIC

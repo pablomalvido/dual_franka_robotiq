@@ -54,10 +54,14 @@ controller_interface::return_type CartesianVelocityControllerSES::update(
   //RCLCPP_INFO(get_node()->get_logger(), "POSE: %.3f, %.3f, %.3f", position_(0), position_(1), position_(2));
 
   if (not vel_target_){
-    RCLCPP_INFO(get_node()->get_logger(), "POSITION CONTROL MODE");
-    vx_target_ = std::clamp(kp*(x_target_-position_(0)), -max_vx_, max_vx_);
-    vy_target_ = std::clamp(kp*(y_target_-position_(1)), -max_vy_, max_vy_);
-    vz_target_ = std::clamp(kp*(z_target_-position_(2)), -max_vz_, max_vz_);
+    //RCLCPP_INFO(get_node()->get_logger(), "POSITION CONTROL MODE");
+    //vx_target_ = std::clamp(kp*(x_target_-position_(0)), -max_vx_, max_vx_);
+    //vy_target_ = std::clamp(kp*(y_target_-position_(1)), -max_vy_, max_vy_);
+    //vz_target_ = std::clamp(kp*(z_target_-position_(2)), -max_vz_, max_vz_);
+    vx_target_ = kp*(x_target_-position_(0));
+    vy_target_ = kp*(y_target_-position_(1));
+    vz_target_ = kp*(z_target_-position_(2));
+    limitVelocity(vx_target_, vy_target_, vz_target_, k_v_max_);
   }
 
   if (target_update){
@@ -77,7 +81,7 @@ controller_interface::return_type CartesianVelocityControllerSES::update(
   double vx_tgt = vx_target_;
   double vy_tgt = vy_target_;
   double vz_tgt = vz_target_;
-  RCLCPP_INFO(get_node()->get_logger(), "CMD VELOCITIES: %.3f, %.3f, %.3f", vx_tgt, vy_tgt, vz_tgt);
+  //RCLCPP_INFO(get_node()->get_logger(), "CMD VELOCITIES: %.3f, %.3f, %.3f", vx_tgt, vy_tgt, vz_tgt);
 
 
   // Exponential smoothing: blend previous command with new target
@@ -215,6 +219,20 @@ void CartesianVelocityControllerSES::targetPosCallback(
   z_target_ = static_cast<double>(target->z);
   vel_target_ = false;
   target_update = true;
+}
+
+void CartesianVelocityControllerSES::limitVelocity(double& vx, double& vy, double& vz, double v_max)
+{
+    double v2 = vx*vx + vy*vy + vz*vz;
+    double vmax2 = v_max * v_max;
+
+    if (v2 > vmax2)
+    {
+        double scale = v_max / std::sqrt(v2);
+        vx *= scale;
+        vy *= scale;
+        vz *= scale;
+    }
 }
 
 }  // namespace custom_franka_controllers

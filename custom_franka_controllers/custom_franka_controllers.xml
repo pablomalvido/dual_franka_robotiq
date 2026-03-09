@@ -29,4 +29,10 @@
             The cartesian force example controller commands linear force with x, y, and z components.
         </description>
     </class>
+    <class name="custom_franka_controllers/JointImpedanceIKController"
+           type="custom_franka_controllers::JointImpedanceIKController" base_class_type="controller_interface::ControllerInterface">
+        <description>
+            The joint impedance controller with inverse kinematics for teleoperation.
+        </description>
+    </class>
 </library>
