@@ -32,8 +32,12 @@ setup(
             "kaleel_app_test = python_scripts_pkg.kaleel_app_test:main",
             "kaleel_app_force_impulse = python_scripts_pkg.kaleel_app_force_impulse:main",
             "aruco_tracker = python_scripts_pkg.aruco_tracker_reference_d455_ros:main",
-            "ses_pretension = python_scripts_pkg.ses_pretension:main"
+            "aruco_tracker_angle = python_scripts_pkg.aruco_tracker_reference_d455_ros_angle:main",
+            "aruco_tracker_visibility = python_scripts_pkg.aruco_tracker_reference_d455_ros_visibility:main",
+            "ses_pretension = python_scripts_pkg.ses_pretension:main",
+            "ses_pretension_ring = python_scripts_pkg.ses_pretension_ring:main",
+            "ses_pretension_angle = python_scripts_pkg.ses_pretension_angle:main",
+            "ses_pretension_visibility = python_scripts_pkg.ses_pretension_visibility:main"
         ],
-        
     },
 )

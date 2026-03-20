@@ -27,6 +27,7 @@ endif()
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ForceControllerCmd.msg"
   "msg/SesStarter.msg"
+  "msg/SesStarterAngle.msg"
   "msg/MarkerPose.msg"
   "msg/MarkerPoseArray.msg"
   "srv/CheckEvenOdd.srv"

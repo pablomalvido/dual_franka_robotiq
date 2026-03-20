@@ -278,8 +278,8 @@ def generate_launch_description():
 
     aruco_tracker = Node(
         package='python_scripts_pkg',
-        executable='aruco_tracker',
-        name='aruco_tracker',
+        executable='aruco_tracker_visibility',
+        name='aruco_tracker_visibility',
         output='screen',
     )
 

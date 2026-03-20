@@ -26,6 +26,7 @@ from matplotlib import rc
 import json
 import yaml
 import os
+
 from ament_index_python.packages import get_package_share_directory
 
 # Enable paper-quality text rendering

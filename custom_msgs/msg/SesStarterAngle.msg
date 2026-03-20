@@ -1,0 +1,2 @@
+geometry_msgs/Point start_position
+float64 ses_target

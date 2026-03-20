@@ -5,7 +5,7 @@ import time
 from rclpy.node import Node
 from controller_manager_msgs.srv import SwitchController
 from geometry_msgs.msg import PoseStamped, Pose, Vector3, WrenchStamped, PoseArray, Point
-from std_msgs.msg import Header
+from std_msgs.msg import Header, Bool
 from builtin_interfaces.msg import Duration
 from tf2_ros import Buffer, TransformListener
 from tf2_ros import LookupException, ConnectivityException, ExtrapolationException
@@ -14,12 +14,13 @@ from custom_msgs.msg import SesStarter
 
 class SESPretension(Node):
 
-    def __init__(self):
+    def __init__(self, use_pretense=True):
         super().__init__('ses_pretension')
 
         self.log = []
         self.log_pos = []
         self.pretense = False
+        self.use_pretense = use_pretense
         
         ## EXP1: TPU beam
         # self.F_pretense = 2
@@ -42,10 +43,57 @@ class SESPretension(Node):
         #     (0.0, -0.26),
         #     (0.0, -0.12),
         #     (0.0, 0.03)])
+        # self.ses_target = self.define_target_msg([
+        #     (-0.04, -0.23),
+        #     (0.02, -0.09),
+        #     (0.02, 0.07)])
+        ## Forward straight
+        # self.ses_target = self.define_target_msg([
+        #     (-0.04, -0.1),
+        #     (-0.04, 0.04),
+        #     (-0.04, 0.2)])
+        ## Middle curvature
+        # self.ses_target = self.define_target_msg([
+        #     (-0.05, -0.12),
+        #     (0.03, -0.02),
+        #     (0.07, 0.17)])
+        ## Bottom curvature: DIDNT WORK
+        # self.ses_target = self.define_target_msg([
+        #     (-0.16, -0.09),
+        #     (-0.09, -0.04),
+        #     (0.08, 0.0)])
+        ## Bottom straight
+        # self.ses_target = self.define_target_msg([
+        #     (-0.16, -0.07),
+        #     (-0.12, 0.06),
+        #     (-0.07, 0.22)])
+        ## Impossible
+        # self.ses_target = self.define_target_msg([
+        #     (-0.08, -0.10),
+        #     (0.02, 0.05),
+        #     (-0.08, 0.2)])
+
+        ## EXP4: Branch
+        ## Top bending 1,2,3
+        # self.ses_target = self.define_target_msg([
+        #     (0.11, -0.15),
+        #     (-0.06, 0.03),
+        #     (-0.13, 0.26)])
+        ## Bottom bending
+        # self.ses_target = self.define_target_msg([ 
+        #     (0.17, -0.01),
+        #     (-0.06, 0.12),
+        #     (-0.23, 0.29)])
+        ## Top bending
+        # self.ses_target = self.define_target_msg([
+        #     (0.02, -0.13),
+        #     (-0.17, 0.05),
+        #     (-0.28, 0.26)])
+        ## Top bending branch 2
         self.ses_target = self.define_target_msg([
-            (-0.04, -0.23),
-            (0.02, -0.09),
-            (0.02, 0.07)])
+            (0.02, -0.001),
+            (-0.14, 0.09),
+            (-0.24, 0.22)])
         
         self.ee_length = 0.0
 
@@ -62,6 +110,8 @@ class SESPretension(Node):
         self.ses_activate_pub = self.create_publisher(SesStarter, "ses/activate", 10)
         self.forces_sub = self.create_subscription(WrenchStamped, 'nordbo/wrench',self.read_forces,10) #1
         self.forces_sub
+        self.SES_done = self.create_subscription(Bool, 'ses/finish',self.ses_done_cb,10) #1
+        self.SES_done
         
         #while not self.cli_target_config.wait_for_service(timeout_sec=1.0):
         #    self.get_logger().info('Move to target pose service not available, waiting...')
@@ -83,6 +133,7 @@ class SESPretension(Node):
             return
         
     def switch_controller(self, start_c, stop_c):
+        self.get_logger().info("Switching controllers...")
         self.switch_controller_req.start_controllers = start_c
         self.switch_controller_req.stop_controllers = stop_c
         self.switch_controller_req.strictness = SwitchController.Request.STRICT
@@ -113,11 +164,34 @@ class SESPretension(Node):
         print(F_total)
         if self.write_data:
             self.log.append({'fx': msg.wrench.force.x, 'fy': msg.wrench.force.y, 'fz': msg.wrench.force.z, 'F': F_total, 't': (time.time()-self.start_time)})
-        if (F_total >= self.F_pretense) and not self.pretense:
-            self.pretense = True
-            self.set_target_cartesian_speed(0.0,0.0,0.0,0.0,False)
-            self.get_logger().info("Pre-tension force achieved, changing to SES controller")
-            self.timer_ses = self.create_timer(0.1, self.start_ses) 
+        if self.use_pretense:
+            if (F_total >= self.F_pretense) and not self.pretense:
+                self.pretense = True
+                self.set_target_cartesian_speed(0.0,0.0,0.0,0.0,False)
+                self.get_logger().info("Pre-tension force achieved, changing to SES controller")
+                self.timer_ses = self.create_timer(0.1, self.start_ses) 
+
+    def ses_done_cb(self, msg):
+        self.get_logger().info("SES finished, stopping robot")
+        start_controllers = []
+        stop_controllers = ['cartesian_velocity_controller_ses']
+        future4 = self.switch_controller(start_c=start_controllers, stop_c=stop_controllers)
+        future4.add_done_callback(self.switch_done_1_cb)
+
+    
+    def switch_done_1_cb(self, future):
+        try:
+            if future.result() is not None:
+                self.get_logger().info("Success")
+            else:
+                self.get_logger().error('Service call failed')
+        except Exception as e:
+            self.get_logger().error(f"Service call failed: {e}")
+        #Active MoveIt controller
+        stop_controllers = []
+        start_controllers = ['fr3_arm_controller']
+        self.switch_controller(start_c=start_controllers, stop_c=stop_controllers)
+
 
     def get_tf_ee(self):
         try:
@@ -134,6 +208,9 @@ class SESPretension(Node):
             self.get_logger().warn(f"Transform not available: {e}")
             return [], False
         
+    def direct_start_ses(self):
+        self.get_logger().info("Changing to SES controller")
+        self.timer_ses = self.create_timer(0.1, self.start_ses) 
 
     def start_ses(self):
         # Stop the timer so it runs only once
@@ -179,12 +256,12 @@ class SESPretension(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    node = SESPretension()
+    use_pretense = False
+    node = SESPretension(use_pretense)
 
     stop_controllers = ['fr3_arm_controller']
     start_controllers = ['cartesian_velocity_controller_ses']
 
-    node.get_logger().info("Switching controllers...")
     future3 = node.switch_controller(start_c=start_controllers, stop_c=stop_controllers)
     rclpy.spin_until_future_complete(node, future3)
     if future3.result() is not None:
@@ -193,7 +270,10 @@ def main(args=None):
         node.get_logger().error('Service call failed')
 
     node.get_logger().info("Setting cartesian controller target...")
-    node.set_target_cartesian_speed(0.02,0.0,0.0,0.0,False)
+    if use_pretense:
+        node.set_target_cartesian_speed(0.02,0.0,0.0,0.0,False)
+    else:
+        node.direct_start_ses()
 
     rclpy.spin(node)
     node.destroy_node()
