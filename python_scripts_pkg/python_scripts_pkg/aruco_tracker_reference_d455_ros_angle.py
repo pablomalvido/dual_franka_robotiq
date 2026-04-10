@@ -13,11 +13,11 @@ class ArucoPublisher(Node):
     def __init__(self):
         super().__init__('aruco_publisher')
 
-        self.marker_pub = self.create_publisher(Float64, 'ses/aruco_angle', 10)
+        self.marker_pub = self.create_publisher(Float64, 'ses/feat_1D', 10)
 
         self.subscription = self.create_subscription(
             SesStarterAngle,
-            "ses/activate",
+            "ses/activate_1D",
             self.ref_poses_callback,
             10)
 
