@@ -22,7 +22,7 @@ class SESPretension(Node):
         self.pretense = False
         self.use_pretense = use_pretense
         
-        self.ses_target = 62.0
+        self.ses_target = 100.0
         
         self.ee_length = 0.0
 
@@ -42,6 +42,7 @@ class SESPretension(Node):
         self.SES_done = self.create_subscription(Bool, 'ses/finish',self.ses_done_cb,10) #1
         self.SES_done
         
+        self.get_logger().info('Running...')
         #while not self.cli_target_config.wait_for_service(timeout_sec=1.0):
         #    self.get_logger().info('Move to target pose service not available, waiting...')
         while not self.cli_switch_controller.wait_for_service(timeout_sec=1.0):
@@ -90,7 +91,7 @@ class SESPretension(Node):
     def read_forces(self,msg):
         Force=np.array([msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z])
         F_total = np.linalg.norm(Force)
-        print(F_total)
+        #print(F_total)
         if self.write_data:
             self.log.append({'fx': msg.wrench.force.x, 'fy': msg.wrench.force.y, 'fz': msg.wrench.force.z, 'F': F_total, 't': (time.time()-self.start_time)})
         if self.use_pretense:

@@ -31,7 +31,7 @@ setup(
             'ses_exp1 = mujoco_ros.ses_controller_real_exp1:main',
             'ses_exp2 = mujoco_ros.ses_controller_real_exp2:main',
             'ses_exp3 = mujoco_ros.ses_controller_real_exp3:main',
-            'ses_real = mujoco_ros.ses_controller_real_generic_disturbances:main',
+            'ses_real = mujoco_ros.ses_controller_real_generic_disturbances_v2:main',
             'ses_real_angle = mujoco_ros.ses_controller_real_generic_angle:main',
             'ses_real_visibility = mujoco_ros.ses_controller_real_generic_visibility:main',
         ],

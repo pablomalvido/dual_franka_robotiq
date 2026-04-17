@@ -278,9 +278,23 @@ def generate_launch_description():
 
     aruco_tracker = Node(
         package='python_scripts_pkg',
-        executable='aruco_tracker_angle',
-        name='aruco_tracker_angle',
+        executable='aruco_tracker_visibility',
+        name='aruco_tracker_visibility',
         output='screen',
+    )
+
+    # srdf_file = os.path.join(
+    #     pkg_share,
+    #     'config',
+    #     'test.srdf'
+    # )
+
+    moveit_save_config_node = Node(
+        package='python_scripts_pkg',
+        executable='rqt_save_moveit_config',
+        name='rqt_save_moveit_config',
+        arguments=['-d', franka_semantic_xacro_file],
+        output='screen'
     )
 
     robot_arg = DeclareLaunchArgument(
@@ -325,7 +339,8 @@ def generate_launch_description():
          #gripper_launch_file,
          cartesian_velocity_controller_ses, 
          ft_sensor_node,
-         aruco_tracker
+         aruco_tracker,
+         moveit_save_config_node
          ]
         + load_controllers
     )

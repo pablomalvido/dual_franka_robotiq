@@ -3,7 +3,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import PoseArray, Pose
 from custom_msgs.msg import SesStarterAngle, MarkerPoseArray, MarkerPose
-from std_msgs.msg import Int32
+from std_msgs.msg import Float64
 import cv2
 import numpy as np
 import pyrealsense2 as rs
@@ -13,7 +13,7 @@ class ArucoPublisher(Node):
     def __init__(self):
         super().__init__('aruco_publisher')
 
-        self.marker_pub = self.create_publisher(Int32, 'ses/aruco_count', 10)
+        self.marker_pub = self.create_publisher(Float64, 'ses/feat_1D', 10)
 
         # self.subscription = self.create_subscription(
         #     SesStarterAngle,
@@ -101,8 +101,8 @@ class ArucoPublisher(Node):
                 # box_w, box_h = 360, 80
 
         # Publish visible marker count
-        msg = Int32()
-        msg.data = int(visible_count)
+        msg = Float64()
+        msg.data = float(visible_count)
         self.marker_pub.publish(msg)
 
         # Get image dimensions

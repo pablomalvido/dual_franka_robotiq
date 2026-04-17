@@ -87,8 +87,8 @@ class ChainErgodicServoingProgressDriven(Node):
 
         # ROS interfaces to communicate with Mujoco simulation
         self.q_des_pub = self.create_publisher(Vector3, "/cartesian_velocity_controller_ses/target_pos", 10) #Actuation command (Desired x, z position for the robot)
-        self.activate_ses_subs = self.create_subscription(SesStarterAngle, "ses/activate", self._activate_ses_cb, 10) #Activate controller and receive initial position to configure the domain
-        self.marker_poses_subs = self.create_subscription(Float64, "ses/aruco_angle", self._marker_angle_cb, 10) #Current marker poses
+        self.activate_ses_subs = self.create_subscription(SesStarterAngle, "ses/activate_1D", self._activate_ses_cb, 10) #Activate controller and receive initial position to configure the domain
+        self.marker_poses_subs = self.create_subscription(Float64, "ses/feat_1D", self._marker_angle_cb, 10) #Current marker poses
         self.forces_sub = self.create_subscription(WrenchStamped, 'nordbo/wrench',self.read_forces,10) #1
         self.forces = np.zeros(6)
         self.finish_pub = self.create_publisher(Bool, "ses/finish", 10) #Actuation command (Desired x, z position for the robot)

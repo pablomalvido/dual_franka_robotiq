@@ -37,7 +37,8 @@ setup(
             "ses_pretension = python_scripts_pkg.ses_pretension:main",
             "ses_pretension_ring = python_scripts_pkg.ses_pretension_ring:main",
             "ses_pretension_angle = python_scripts_pkg.ses_pretension_angle:main",
-            "ses_pretension_visibility = python_scripts_pkg.ses_pretension_visibility:main"
+            "ses_pretension_visibility = python_scripts_pkg.ses_pretension_visibility:main",
+            "rqt_save_moveit_config = python_scripts_pkg.rqt_save_moveit_config:main"
         ],
     },
 )

@@ -36,7 +36,7 @@ class SESPretension(Node):
 
         self.cli_switch_controller = self.create_client(SwitchController, 'controller_manager/switch_controller')
         self.cartesian_speed_controller_target_pub = self.create_publisher(Vector3, '/cartesian_velocity_controller_ses/target_speed', 10)
-        self.ses_activate_pub = self.create_publisher(SesStarterAngle, "ses/activate", 10)
+        self.ses_activate_pub = self.create_publisher(SesStarterAngle, "ses/activate_1D", 10)
         self.forces_sub = self.create_subscription(WrenchStamped, 'nordbo/wrench',self.read_forces,10) #1
         self.forces_sub
         self.SES_done = self.create_subscription(Bool, 'ses/finish',self.ses_done_cb,10) #1

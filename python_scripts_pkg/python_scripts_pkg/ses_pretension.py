@@ -90,10 +90,14 @@ class SESPretension(Node):
         #     (-0.17, 0.05),
         #     (-0.28, 0.26)])
         ## Top bending branch 2
+        # self.ses_target = self.define_target_msg([
+        #     (0.02, -0.001),
+        #     (-0.14, 0.09),
+        #     (-0.24, 0.22)])
+        ## Bending branch 2 feat
         self.ses_target = self.define_target_msg([
-            (0.02, -0.001),
-            (-0.14, 0.09),
-            (-0.24, 0.22)])
+            (-0.07, -0.12),
+            (-0.03, 0.11)])
         
         self.ee_length = 0.0
 
@@ -118,6 +122,7 @@ class SESPretension(Node):
         while not self.cli_switch_controller.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('Switch controller service not available, waiting...')
 
+        self.get_logger().info("Working...")
         #self.move_target_req = MoveTarget.Request()
         self.switch_controller_req = SwitchController.Request()
 
@@ -161,7 +166,7 @@ class SESPretension(Node):
     def read_forces(self,msg):
         Force=np.array([msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z])
         F_total = np.linalg.norm(Force)
-        print(F_total)
+        #print(F_total)
         if self.write_data:
             self.log.append({'fx': msg.wrench.force.x, 'fy': msg.wrench.force.y, 'fz': msg.wrench.force.z, 'F': F_total, 't': (time.time()-self.start_time)})
         if self.use_pretense:
