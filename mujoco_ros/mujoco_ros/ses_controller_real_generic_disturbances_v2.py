@@ -77,7 +77,7 @@ class ChainErgodicServoingProgressDriven(Node):
                  dt=0.05,
                  max_steps=1500,
                  num_modes=15,
-                 config_file='ses_controller_real_exp10_v1.yaml'):
+                 config_file='ses_controller_real_exp11_v2.yaml'):
         
         super().__init__("ses_controller_real")
 

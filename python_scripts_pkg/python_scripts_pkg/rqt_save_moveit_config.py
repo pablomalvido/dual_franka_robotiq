@@ -5,6 +5,9 @@ import threading
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
+import signal
+from PyQt5.QtCore import QTimer
+
 
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QPushButton,
@@ -110,8 +113,6 @@ def main():
 
     srdf_path = sys.argv[1]
 
-    print("SRDF path: " + srdf_path)
-
     ros_node = JointStateListener()
     ros_node.get_logger().info("SRDF path: " + srdf_path)
 
@@ -122,6 +123,17 @@ def main():
     app = QApplication(sys.argv)
     gui = ConfigSaverGUI(ros_node, srdf_path)
     gui.show()
+
+    # Handle Ctrl+C properly
+    def signal_handler(sig, frame):
+        print("Shutting down...")
+        app.quit()
+
+    signal.signal(signal.SIGINT, signal_handler)
+
+    timer = QTimer()
+    timer.start(100)
+    timer.timeout.connect(lambda: None)
 
     exit_code = app.exec_()
 

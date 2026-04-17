@@ -283,19 +283,25 @@ def generate_launch_description():
         output='screen',
     )
 
-    # srdf_file = os.path.join(
-    #     pkg_share,
-    #     'config',
-    #     'test.srdf'
-    # )
-
     moveit_save_config_node = Node(
         package='python_scripts_pkg',
         executable='rqt_save_moveit_config',
         name='rqt_save_moveit_config',
-        arguments=['-d', franka_semantic_xacro_file],
+        arguments=[franka_semantic_xacro_file],
         output='screen'
     )
+
+    rqt_process = ExecuteProcess(
+        cmd=[
+            "rqt",
+            "--standalone",
+            "rqt_controller_manager.controller_manager.ControllerManager"
+            #"--force-discover"
+        ],
+        output="screen"
+    )
+
+    
 
     robot_arg = DeclareLaunchArgument(
         robot_ip_parameter_name,
@@ -341,6 +347,7 @@ def generate_launch_description():
          ft_sensor_node,
          aruco_tracker,
          moveit_save_config_node
+         #rqt_process
          ]
         + load_controllers
     )
